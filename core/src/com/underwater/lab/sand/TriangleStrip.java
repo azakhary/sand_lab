@@ -1,11 +1,11 @@
 package com.underwater.lab.sand;
 
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Mesh;
-import com.badlogic.gdx.graphics.VertexAttribute;
-import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g3d.Renderable;
+import com.badlogic.gdx.graphics.g3d.utils.MeshBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Vector3;
 
 /**
  * Created by azakhary on 12/17/2015.
@@ -24,50 +24,46 @@ public class TriangleStrip extends Renderable {
 
         float side = 1f;
 
-        int attrCount = 8;
+        int attrCount = 5;
         float[] vertices = new float[(size+1)*(size+1)*attrCount];
-        mesh = new Mesh(true, (size+1)*(size+1)*attrCount, 0,
-                new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
-                new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE),
-                new VertexAttribute(VertexAttributes.Usage.Normal, 3, ShaderProgram.NORMAL_ATTRIBUTE));
+        short[] indices = new short[size*size*2*3];
+
+         mesh = new Mesh(true, (size+1)*(size+1)*attrCount, size*size*2*3,
+                         new VertexAttribute(VertexAttributes.Usage.Position, 3, ShaderProgram.POSITION_ATTRIBUTE),
+                         new VertexAttribute(VertexAttributes.Usage.TextureCoordinates, 2, ShaderProgram.TEXCOORD_ATTRIBUTE));
+
 
         int vidx = 0;
-        for(int row = 0; row < size; row++) {
-            int col_start;
-            int col_dir;
-            int col_iter = 0;
-            if(row % 2 == 0) {
-                col_start = 0;
-                col_dir = 1;
-            } else {
-                col_start = size;
-                col_dir = -1;
-            }
+        int iidx = 0;
 
-            for(int col = col_start; col_iter++ <= size; col+=col_dir) {
+        for(int row = 0; row <= size; row++) {
+            for(int col = 0; col <= size; col++) {
                 vertices[vidx++] = col*side;
                 vertices[vidx++] = 0;
                 vertices[vidx++] = row*side;
-                vertices[vidx++] = col*side;
-                vertices[vidx++] = row*side;
-                vertices[vidx++] = 0;
-                vertices[vidx++] = 1;
-                vertices[vidx++] = 0;
-
-                vertices[vidx++] = col*side;
-                vertices[vidx++] = 0;
-                vertices[vidx++] = (row+1)*side;
-                vertices[vidx++] = col*side;
-                vertices[vidx++] = (row+1)*side;
-                vertices[vidx++] = 0;
-                vertices[vidx++] = 1;
-                vertices[vidx++] = 0;
+                vertices[vidx++] = col*side/(float)size;
+                vertices[vidx++] = row*side/(float)size;
             }
-
-            mesh.setVertices(vertices);
-
-            meshPart.mesh = mesh;
-            meshPart.primitiveType = GL20.GL_TRIANGLES;
         }
+
+        for(short row = 0; row < size; row++) {
+            for(short col = 0; col < size; col++) {
+                indices[iidx++] = (short) (row * (size+1) + col);
+                indices[iidx++] = (short) ((row + 1) * (size+1) + col);
+                indices[iidx++] = (short) (row * (size+1) + col + 1);
+
+                indices[iidx++] = (short) ((row + 1) * (size+1) + col);
+                indices[iidx++] = (short) ((row + 1) * (size+1) + col + 1);
+                indices[iidx++] = (short) (row * (size+1) + col + 1);
+            }
+        }
+
+        mesh.setVertices(vertices);
+        mesh.setIndices(indices);
+
+        meshPart.mesh = mesh;
+        meshPart.size = vertices.length;
+        meshPart.primitiveType = GL20.GL_TRIANGLES;
+        //meshPart.primitiveType = GL20.GL_LINE_STRIP;
     }
 }
