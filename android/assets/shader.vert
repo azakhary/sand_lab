@@ -14,7 +14,7 @@ uniform sampler2D u_normal_map_texture;
 
 void main() {
     v_texCoord = a_texCoord;
-    float hM = 40.0;
+    float hM = 30.0;
 
     vec4 hC = texture2D(u_height_map_texture, a_texCoord);
     hC.a = hC.r;
