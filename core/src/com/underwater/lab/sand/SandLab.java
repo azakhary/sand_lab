@@ -18,7 +18,8 @@ public class SandLab extends ApplicationAdapter {
 	private PerspectiveCamera camera;
 
 	private Texture heightMap;
-	Pixmap heightmapImage;
+	private Texture normalMap;
+
 
 	private TriangleStrip triangleStrip;
 
@@ -30,6 +31,7 @@ public class SandLab extends ApplicationAdapter {
 	@Override
 	public void create () {
 		heightMap = new Texture(Gdx.files.internal("jrn2.png"));
+		normalMap = new Texture(Gdx.files.internal("jrn2neb.png"));
 
 		camera = new PerspectiveCamera(75, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(120f, 60f, 120f);
@@ -54,20 +56,20 @@ public class SandLab extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		Gdx.gl.glClearColor(233/255f, 223/255f, 189/255f, 1);
+		Gdx.gl.glClearColor(233 / 255f, 223 / 255f, 189 / 255f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT | (Gdx.graphics.getBufferFormat().coverageSampling ? GL20.GL_COVERAGE_BUFFER_BIT_NV : 0));
 
 		camController.update();
 
-		Gdx.graphics.getGL20().glActiveTexture(GL20.GL_TEXTURE0);
-		heightMap.bind();
 
 		renderContext.begin();
 		shader.begin(camera, renderContext);
-		//Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
-		//Gdx.graphics.getGL20().glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
+		normalMap.bind(1);
+		shader.program.setUniformi("u_normal_map_texture", 1);
+		heightMap.bind(0);
 		shader.program.setUniformi("u_height_map_texture", 0);
-		shader.program.setUniformf("hm_size", heightMap.getWidth());
+
 		shader.render(triangleStrip);
 		shader.end();
 		renderContext.end();
