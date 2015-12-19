@@ -6,12 +6,15 @@ varying vec2 v_texCoord;
 varying vec2 v_pos;
 
 uniform sampler2D u_height_map_texture;
+uniform vec3 camera_dir;
+uniform vec3 u_light;
 
 varying vec3 v_normal;
+varying vec3 v_specular;
 
 void main() {
     vec4 color = vec4(192.0/255.0, 129.0/255.0, 112.0/255.0, 1.0);
-    vec3 light = normalize(vec3(1, 1, 1));
+    vec3 light = normalize(u_light);
     vec4 lightColor = vec4(1.0, 1.0, 1.0, 0.4);
     vec4 ambientColor = vec4(1.0, 1.0, 1.0, 0.8);
 
@@ -19,9 +22,8 @@ void main() {
     v_normal.y *= 0.3;
     vec3 diffuse = (lightColor.rgb * lightColor.a) * max(4*dot(v_normal, light), 0.0);
 
-
     vec3 ambient = ambientColor.rgb * ambientColor.a;
-    vec3 intensity = ambient + diffuse;
+    vec3 intensity = ambient + diffuse + v_specular;
     vec3 finalColor = color.rgb * intensity;
     gl_FragColor = vec4(finalColor, color.a);
 

@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.shaders.DefaultShader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.DefaultTextureBinder;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
+import com.badlogic.gdx.math.Vector3;
 
 public class SandLab extends ApplicationAdapter {
 
@@ -69,6 +70,9 @@ public class SandLab extends ApplicationAdapter {
 		shader.program.setUniformi("u_normal_map_texture", 1);
 		heightMap.bind(0);
 		shader.program.setUniformi("u_height_map_texture", 0);
+
+		shader.program.setUniformf("u_light", new Vector3(1, 1, 1));
+		shader.program.setUniformf("camera_dir", camera.direction);
 
 		shader.render(triangleStrip);
 		shader.end();
