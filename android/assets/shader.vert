@@ -30,7 +30,7 @@ void main() {
     vec3 light = normalize(u_light);
     vec3 reflectVec = reflect(light, -v_normal);
     vec3 specIntensity  = pow(max(dot(reflectVec, camera_dir), 0.0), 8.0);
-    v_specular = specIntensity  * vec3(1.0,0.7,0.3) * 0.7;
+    v_specular = specIntensity  * vec3(1.0,1.0,1.0) * 0.7;
 
     v_pos = pC;
     gl_Position = u_projViewTrans * u_worldTrans * vec4(pC, 1.0);
