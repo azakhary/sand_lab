@@ -41,8 +41,8 @@ public class TriangleStrip extends Renderable {
                 vertices[vidx++] = col*side;
                 vertices[vidx++] = 0;
                 vertices[vidx++] = row*side;
-                vertices[vidx++] = col*side/(float)size;
                 vertices[vidx++] = row*side/(float)size;
+                vertices[vidx++] = 1f-col*side/(float)size;
             }
         }
 
