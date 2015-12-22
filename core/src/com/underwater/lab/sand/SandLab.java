@@ -85,6 +85,8 @@ public class SandLab extends ApplicationAdapter {
 		renderContext.begin();
 		shader.begin(camera, renderContext);
 
+		normalMap.bind(2);
+		shader.program.setUniformi("u_noise_texture", 2);
 		normalMap.bind(1);
 		shader.program.setUniformi("u_normal_map_texture", 1);
 		heightMap.bind(0);

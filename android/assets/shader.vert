@@ -8,7 +8,6 @@ uniform mat4 u_projViewTrans;
 varying vec2 v_texCoord;
 varying vec3 v_normal;
 varying vec2 v_pos;
-varying vec3 v_specular;
 
 uniform sampler2D u_height_map_texture;
 uniform sampler2D u_normal_map_texture;
@@ -26,13 +25,6 @@ void main() {
 
     v_normal = normalize(texture2D(u_normal_map_texture, a_texCoord) * 2.0 - 1.0);
     v_normal = vec3(v_normal.g, v_normal.b, -v_normal.r); //what the shet!
-
-    // specular part
-    vec3 light = normalize(u_light);
-
-    vec3 reflectVec = normalize(reflect(-light, v_normal));
-    vec3 specIntensity  = pow(max(dot(reflectVec, camera_dir), 0.0), 90.0);
-    v_specular = specIntensity  * u_light_color.rgb * 0.5;
 
     v_pos = pC;
     gl_Position = u_projViewTrans * u_worldTrans * vec4(pC, 1.0);
